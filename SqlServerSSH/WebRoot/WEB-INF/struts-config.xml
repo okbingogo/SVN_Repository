@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+	<form-beans>
+		<form-bean name="userForm" type="com.kenfor.demo.struts.form.UserForm" />
+		<form-bean name="searchForm" type="com.kenfor.demo.struts.form.SearchForm" />
+	</form-beans>
+	<global-exceptions />
+	<global-forwards />
+	<action-mappings>
+	
+		<action path="/getUserList" parameter="getUserList" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy" >
+		</action>
+		
+		<action path="/index" parameter="index" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="toMessage" path="/toMessage.do" />
+		</action>
+		
+		<action path="/toLogin" parameter="toLogin" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+		</action>
+		
+		<action path="/toRegister" parameter="toRegister" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+		</action>
+		
+		<action path="/login" parameter="login" name="userForm" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="index" path="/index.do"></forward>
+		</action>
+		
+		<action path="/register" parameter="register" name="userForm" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="index" path="/index.do"></forward>
+		</action>
+		
+		<action path="/logout" parameter="logout" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="index" path="/index.do"></forward>
+		</action>
+		
+		<action path="/toMessage" parameter="toMessage" name="searchForm" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+		</action>
+		
+		<action path="/leavedMessage" parameter="leavedMessage" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="toMessage" path="/toMessage.do" />
+			<forward name="toLogin" path="/toLogin.do" />
+		</action>
+		
+		<action path="/toComment" parameter="toComment" name="searchForm" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy" >
+		</action>
+		
+		<action path="/comment" parameter="comment" scope="request"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward name="toComment" path="/toComment.do" />
+			<forward name="toLogin" path="/toLogin.do" />
+		</action>
+		
+	</action-mappings>
+	
+	
+	<!-- 将action交给spring管理 -->
+	<controller>
+		<set-property property="processorClass"
+			value="org.springframework.web.struts.DelegatingRequestProcessor" />
+	</controller>
+	<message-resources parameter="com.kenfor.demo.struts.ApplicationResources" />
+	<plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
+		<set-property property="contextConfigLocation" value="/WEB-INF/applicationContext.xml" />
+	</plug-in>
+	
+</struts-config>
+
