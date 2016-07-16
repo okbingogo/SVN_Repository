@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+  http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+  http://www.springframework.org/schema/context  
+  http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+  http://www.springframework.org/schema/mvc  
+  http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+  http://www.springframework.org/schema/tx 
+  http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<!-- 自动扫描 -->
+	<context:component-scan base-package="com.kenfor.ssm" />
+
+	<bean id="dataSource_mysql" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+		<property name="alias" value="mysql" />
+		<property name="driver" value="com.mysql.jdbc.Driver" />
+		<property name="driverUrl" value="jdbc:mysql://localhost:3306/msg_board_db?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="user" value="root" />
+		<property name="password" value="root" />
+		<property name="maximumConnectionCount" value="10" />
+		<property name="minimumConnectionCount" value="3" />
+		<property name="prototypeCount" value="3" />
+		<property name="simultaneousBuildThrottle" value="3" />
+		<property name="houseKeepingTestSql" value="select CURRENT_DATE" />
+		<property name="trace" value="true" />
+		<property name="statistics" value="10s,1m,1d" />
+		<property name="statisticsLogLevel" value="ERROR" />
+	</bean>
+	
+	<bean id="dataSource_mssql" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+		<property name="alias" value="mssql" />
+		<property name="driver" value="net.sourceforge.jtds.jdbc.Driver" />
+		<property name="driverUrl" value="jdbc:jtds:sqlserver://localhost:1433;databaseName=msg_board_db;" />
+		<property name="user" value="sa" />
+		<property name="password" value="root" />
+		<property name="maximumConnectionCount" value="10" />
+		<property name="minimumConnectionCount" value="3" />
+		<property name="prototypeCount" value="3" />
+		<property name="simultaneousBuildThrottle" value="3" />
+		<property name="houseKeepingTestSql" value="select GETDATE()" />
+		<property name="trace" value="true" />
+		<property name="statistics" value="10s,1m,1d" />
+		<property name="statisticsLogLevel" value="ERROR" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource_mysql" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath:com/kenfor/ssm/dao/xml/*.xml" />
+		<!-- 自动使用类别名 -->
+		<property name="typeAliasesPackage" value="com.kenfor.ssm.model" />
+		<!-- 添加配置分页插件 -->
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+							<!-- dialect=mysql -->
+							offsetAsPageNum=true
+							rowBoundsWithCount=true
+							pageSizeZero=true
+							pageSizeZero=true
+							reasonable=false
+							params=pageNum=pageHelperStart
+							pageSize=pageHelperRows
+							supportMethodsArguments=false
+							returnPageInfo=none
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+
+	<!-- 自动扫描 mybatis mapper 接口 -->
+	<bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.kenfor.ssm.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource_mysql" />
+	</bean>
+
+	<!-- 开启注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+</beans>

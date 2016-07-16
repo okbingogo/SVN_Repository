@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kenfor.ssm.dao.ICommentDAO" >
+  <resultMap id="BaseResultMap" type="com.kenfor.ssm.model.Comment" >
+    <id column="comm_id" property="commId" jdbcType="INTEGER" />
+    <result column="from_name" property="fromName" jdbcType="VARCHAR" />
+    <result column="msg_id" property="msgId" jdbcType="INTEGER" />
+    <result column="comm_content" property="commContent" jdbcType="VARCHAR" />
+    <result column="comm_time" property="commTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    comm_id, from_name, msg_id, comm_content, comm_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_comment
+    where comm_id = #{commId,jdbcType=INTEGER}
+  </select>
+  <select id="selectBySearch" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_comment where msg_id=#{msgId}
+    	<if test="keyword != null and keyword !=''">
+    		and (from_name like #{keyword} or comm_content like #{keyword} ) 
+    	</if>
+    	<if test="startTime != null and startTime !=''">
+    		and comm_time &gt; #{startTime} 
+    	</if>
+    	<if test="endTime != null and endTime !=''">
+    		and comm_time &lt; #{endTime} 
+    	</if>
+    order by comm_time desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_comment
+    where comm_id = #{commId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.kenfor.ssm.model.Comment" >
+    insert into t_comment (comm_id, from_name, msg_id, 
+      comm_content, comm_time)
+    values (#{commId,jdbcType=INTEGER}, #{fromName,jdbcType=VARCHAR}, #{msgId,jdbcType=INTEGER}, 
+      #{commContent,jdbcType=VARCHAR}, #{commTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kenfor.ssm.model.Comment" >
+    insert into t_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="commId != null" >
+        comm_id,
+      </if>
+      <if test="fromName != null" >
+        from_name,
+      </if>
+      <if test="msgId != null" >
+        msg_id,
+      </if>
+      <if test="commContent != null" >
+        comm_content,
+      </if>
+      <if test="commTime != null" >
+        comm_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="commId != null" >
+        #{commId,jdbcType=INTEGER},
+      </if>
+      <if test="fromName != null" >
+        #{fromName,jdbcType=VARCHAR},
+      </if>
+      <if test="msgId != null" >
+        #{msgId,jdbcType=INTEGER},
+      </if>
+      <if test="commContent != null" >
+        #{commContent,jdbcType=VARCHAR},
+      </if>
+      <if test="commTime != null" >
+        #{commTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kenfor.ssm.model.Comment" >
+    update t_comment
+    <set >
+      <if test="fromName != null" >
+        from_name = #{fromName,jdbcType=VARCHAR},
+      </if>
+      <if test="msgId != null" >
+        msg_id = #{msgId,jdbcType=INTEGER},
+      </if>
+      <if test="commContent != null" >
+        comm_content = #{commContent,jdbcType=VARCHAR},
+      </if>
+      <if test="commTime != null" >
+        comm_time = #{commTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where comm_id = #{commId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kenfor.ssm.model.Comment" >
+    update t_comment
+    set from_name = #{fromName,jdbcType=VARCHAR},
+      msg_id = #{msgId,jdbcType=INTEGER},
+      comm_content = #{commContent,jdbcType=VARCHAR},
+      comm_time = #{commTime,jdbcType=TIMESTAMP}
+    where comm_id = #{commId,jdbcType=INTEGER}
+  </update>
+</mapper>

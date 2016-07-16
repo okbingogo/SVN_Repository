@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kenfor.ssm.dao.IMessageDAO">
+	<resultMap id="BaseResultMap" type="com.kenfor.ssm.model.Message">
+		<id column="msg_id" property="msgId" jdbcType="INTEGER" />
+		<result column="from_name" property="fromName" jdbcType="VARCHAR" />
+		<result column="msg_content" property="msgContent" jdbcType="VARCHAR" />
+		<result column="msg_time" property="msgTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		msg_id, from_name, msg_content, msg_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_message
+		where msg_id = #{msgId,jdbcType=INTEGER}
+	</select>
+	<select id="selectBySearch" resultMap="BaseResultMap" parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from t_message
+		<where>
+			<if test="keyword != null and keyword != ''">
+				(from_name like #{keyword} or msg_content like #{keyword} )
+			</if>
+			<if test="startTime != null and startTime != ''">
+				and msg_time &gt; #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				and msg_time &lt; #{endTime}
+			</if>
+		</where>
+		order by msg_time desc
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_message
+		where msg_id = #{msgId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.kenfor.ssm.model.Message">
+		insert into t_message (msg_id, from_name, msg_content,
+		msg_time)
+		values (#{msgId,jdbcType=INTEGER}, #{fromName,jdbcType=VARCHAR},
+		#{msgContent,jdbcType=VARCHAR},
+		#{msgTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.kenfor.ssm.model.Message">
+		insert into t_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="msgId != null">
+				msg_id,
+			</if>
+			<if test="fromName != null">
+				from_name,
+			</if>
+			<if test="msgContent != null">
+				msg_content,
+			</if>
+			<if test="msgTime != null">
+				msg_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="msgId != null">
+				#{msgId,jdbcType=INTEGER},
+			</if>
+			<if test="fromName != null">
+				#{fromName,jdbcType=VARCHAR},
+			</if>
+			<if test="msgContent != null">
+				#{msgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="msgTime != null">
+				#{msgTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.kenfor.ssm.model.Message">
+		update t_message
+		<set>
+			<if test="fromName != null">
+				from_name = #{fromName,jdbcType=VARCHAR},
+			</if>
+			<if test="msgContent != null">
+				msg_content = #{msgContent,jdbcType=VARCHAR},
+			</if>
+			<if test="msgTime != null">
+				msg_time = #{msgTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where msg_id = #{msgId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.kenfor.ssm.model.Message">
+		update t_message
+		set from_name = #{fromName,jdbcType=VARCHAR},
+		msg_content = #{msgContent,jdbcType=VARCHAR},
+		msg_time = #{msgTime,jdbcType=TIMESTAMP}
+		where msg_id = #{msgId,jdbcType=INTEGER}
+	</update>
+</mapper>
