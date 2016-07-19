@@ -44,12 +44,6 @@
 									</li>
 									<#else>
 									<li>
-										<a href="${base }/toRegister.do" class="gn_name">
-											<em class="W_ficon ficon_user S_ficon">注册</em>
-										</a>
-									</li>
-									<li><span>&nbsp;</span></li>
-									<li>
 										<a href="${base }/toLogin.do" class="gn_name">
 											<em class="W_ficon ficon_user S_ficon">登录</em>
 										</a>
@@ -82,6 +76,10 @@
 						</div>
 						<div id="v6_pl_content_homefeed">
 							<div class="WB_feed WB_feed_v3 WB_feed_newuser">
+								<@messageListDirective curPage=curPage keyword=keyword startTime=startTime endTime=endTime>
+								<#if errorMsg??>
+								<h4 style="color:red">${errorMsg}</h4>
+								<#else>
 								<#list messageList as mess>
 								<div class="WB_cardwrap WB_feed_type S_bg2">
 									<!--主内容-->
@@ -139,7 +137,9 @@
 									</div>
 									<!--/主操作-->
 								</div>
-								</#list>
+									</#list>
+								</#if>
+								</@messageListDirective>
 							</div>
 							<!--主操作-->
 							<div class="WB_feed_handle">

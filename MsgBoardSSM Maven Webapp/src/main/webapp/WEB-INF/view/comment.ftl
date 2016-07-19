@@ -44,12 +44,6 @@
 									</li>
 									<#else>
 									<li>
-										<a href="${base }/toRegister.do" class="gn_name">
-											<em class="W_ficon ficon_user S_ficon">注册</em>
-										</a>
-									</li>
-									<li><span>&nbsp;</span></li>
-									<li>
 										<a href="${base }/toLogin.do" class="gn_name">
 											<em class="W_ficon ficon_user S_ficon">登录</em>
 										</a>
@@ -68,6 +62,10 @@
 					<div class="WB_main_c">
 						<div id="v6_pl_content_publishertop">
 							<!--主内容-->
+							<@messageDirective msgId=msgId>
+							<#if errorMsg??>
+								<h4 style="color:red">${errorMsg}</h4>
+							<#else>
 							<div class="WB_feed_detail clearfix">
 								<div class="WB_screen W_fr">
 									<div class="screen_box">
@@ -86,6 +84,8 @@
 									</div>
 								</div>
 							</div>
+							</#if>
+							</@messageDirective>
 							<!--/主内容-->
 							<div class="send_weibo S_bg2 clearfix">
 								<form action="${base }/comment.do" method="post">
@@ -103,6 +103,10 @@
 						</div>
 						<div id="v6_pl_content_homefeed">
 							<div class="WB_feed WB_feed_v3 WB_feed_newuser">
+							<@commentListDirective msgId=msgId curPage=curPage keyword=keyword startTime=startTime endTime=endTime>
+							<#if errorMsg??>
+								<h4 style="color:red">${errorMsg}</h4>
+								<#else>
 								<#list commentList as comm>
 								<div class="WB_cardwrap WB_feed_type S_bg2">
 									<!--主内容-->
@@ -125,6 +129,8 @@
 									<!--/主内容-->
 								</div>
 								</#list>
+								</#if>
+								</@commentListDirective>
 							</div>
 							<!--主操作-->
 							<div class="WB_feed_handle">

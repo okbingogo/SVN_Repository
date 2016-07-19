@@ -11,16 +11,12 @@ import com.kenfor.ssm.service.IUserService;
 
 @Controller
 public class UserController {
+	
 	@Resource
 	private IUserService userService;
 
 	@RequestMapping("/toLogin.do")
 	public String toLogin() {
-		return "login";
-	}
-
-	@RequestMapping("/toRegister.do")
-	public String toRegister() {
 		return "login";
 	}
 
@@ -37,24 +33,11 @@ public class UserController {
 			userService.login(username, password);
 			request.getSession().setAttribute("username", username);
 			return "forward:/index.do";
-		} catch (Exception e) {
-			e.printStackTrace();
-			request.setAttribute("errorMsg", e.getMessage());
-			return "error";
-		}
-	}
-
-	@RequestMapping("/register.do")
-	public String register(HttpServletRequest request, String username,
-			String password, String email) {
-		try {
-			userService.register(username, password, email);
-			request.getSession().setAttribute("username", username);
-			return "forward:/index.do";
 		} catch (MyException e) {
 			e.printStackTrace();
 			request.setAttribute("errorMsg", e.getMessage());
-			return "error";
+			return "forward:/toLogin.do";
 		}
 	}
+
 }

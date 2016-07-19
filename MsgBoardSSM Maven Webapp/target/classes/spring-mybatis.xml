@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans  
-  http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
-  http://www.springframework.org/schema/context  
-  http://www.springframework.org/schema/context/spring-context-4.0.xsd  
-  http://www.springframework.org/schema/mvc  
-  http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-  http://www.springframework.org/schema/tx 
-  http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
-
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.springframework.org/schema/beans"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+  						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	<!-- 自动扫描 -->
 	<context:component-scan base-package="com.kenfor.ssm" />
-
+	
+	<!-- 配置数据源 -->
 	<bean id="dataSource_mysql" class="org.logicalcobwebs.proxool.ProxoolDataSource">
 		<property name="alias" value="mysql" />
 		<property name="driver" value="com.mysql.jdbc.Driver" />
-		<property name="driverUrl" value="jdbc:mysql://localhost:3306/msg_board_db?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="driverUrl"
+			value="jdbc:mysql://localhost:3306/msg_board_db?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="user" value="root" />
 		<property name="password" value="root" />
 		<property name="maximumConnectionCount" value="10" />
@@ -30,11 +25,13 @@
 		<property name="statistics" value="10s,1m,1d" />
 		<property name="statisticsLogLevel" value="ERROR" />
 	</bean>
-	
+
+	<!-- 配置数据源 -->
 	<bean id="dataSource_mssql" class="org.logicalcobwebs.proxool.ProxoolDataSource">
 		<property name="alias" value="mssql" />
 		<property name="driver" value="net.sourceforge.jtds.jdbc.Driver" />
-		<property name="driverUrl" value="jdbc:jtds:sqlserver://localhost:1433;databaseName=msg_board_db;" />
+		<property name="driverUrl"
+			value="jdbc:jtds:sqlserver://localhost:1433;databaseName=msg_board_db;" />
 		<property name="user" value="sa" />
 		<property name="password" value="root" />
 		<property name="maximumConnectionCount" value="10" />
@@ -47,8 +44,9 @@
 		<property name="statisticsLogLevel" value="ERROR" />
 	</bean>
 
+	<!-- 配置mybatis -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource_mysql" />
+		<property name="dataSource" ref="dataSource_mssql" />
 		<!-- 自动扫描mapping.xml文件 -->
 		<property name="mapperLocations" value="classpath:com/kenfor/ssm/dao/xml/*.xml" />
 		<!-- 自动使用类别名 -->
@@ -85,7 +83,7 @@
 	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource_mysql" />
+		<property name="dataSource" ref="dataSource_mssql" />
 	</bean>
 
 	<!-- 开启注解事务 -->

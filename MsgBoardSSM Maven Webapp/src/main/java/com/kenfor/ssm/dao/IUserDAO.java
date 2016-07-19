@@ -16,4 +16,6 @@ public interface IUserDAO {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+	User selectByEmail(String email);
 }

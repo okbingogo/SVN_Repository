@@ -8,6 +8,9 @@
 <link rel="stylesheet" type="text/css" href="${base }/css/style.css" />
 
 <script src="${base }/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script src="${base }/dwr/engine.js" type="text/javascript"></script>
+<script src="${base }/dwr/util.js" type="text/javascript"></script>
+<script src="${base }/dwr/interface/userService.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 $(function() {
@@ -36,6 +39,8 @@ $(function() {
 		var name_r = $('#name_r').val();
 		var psd_r = $('#psd_r').val();
 		var affirm_psd = $('#affirm_psd').val();
+		var email_state = $('#email');
+		var email = $('#email').val();
 		if (name_r == '') {
 			name_r_state.parent().next().next().css("display", "block");
 			return false;
@@ -47,9 +52,56 @@ $(function() {
 			return false;
 		} else if (psd_r != affirm_psd) {
 			return false;
+		} else if (email == '') {
+			email_state.parent().next().next().css("display", "block");
+			return false;
 		} else {
-			$('.register').submit();
+			userService.register(name_r,psd_r,email,function(data){
+				if(data==true){
+					alert('注册成功！');
+					 $('#name').val(name_r);
+					$('#psd').val(email);
+					$('.login').submit();
+				}else{
+					alert('注册失败，请重试！');
+				}
+			});
+					return false;
+			
 		}
+	});
+	
+	$('#name_r').change(function(){
+	var name_r = $('#name_r').val();
+	userService.checkUsername(name_r,function(data){
+  			if(data==false){
+  				alert('用户名已被注册，请更换重试！');
+  				$('#name_r').parent().next().css("display", "none");
+				$('#name_r').parent().next().next().css("display", "none");
+				$('#name_r').parent().next().next().css("display", "block");
+  			}else{
+  			$('#name_r').parent().next().css("display", "none");
+			$('#name_r').parent().next().next().css("display", "none");
+			$('#name_r').parent().next().css("display", "block");
+  			}
+  			});
+	
+	});
+	$('#email').change(function(){
+	var email = $('#email').val();
+	userService.checkEmail(email,function(data){
+  			if(data==false){
+  				alert('该邮箱已被注册，请更换重试！');
+  				$('#email').parent().next().css("display", "none");
+				$('#email').parent().next().next().css("display", "none");
+				$('#email').parent().next().next().css("display", "block");
+  			}else{
+  			$('#email').parent().next().css("display", "none");
+			$('#email').parent().next().next().css("display", "none");
+			$('#email').parent().next().css("display", "block");
+  			}
+  			});
+	
 	});
 });
 
@@ -108,12 +160,17 @@ function barter_btn(bb) {
 	$(bb).parent().parent().siblings().fadeIn(2000);
 }
 </script>
+<#if errorMsg??>
+<script type="text/javascript">
+alert('${errorMsg}');
+</script>
+</#if>
 </head>
 <body class="login_body">
 
 <div class="login_div">
 	<div class="col-xs-12 login_title">登录</div>
-	<form action="${base }/login.do" class="login" method="post">
+	<form action="${base }/login.do" class="login" method="post" >
 		<div class="nav">
 			<div class="nav login_nav">
 				<div class="col-xs-4 login_username">
@@ -156,7 +213,7 @@ function barter_btn(bb) {
 
 <div class="register_body">
 	<div class="col-xs-12 register_title">注册</div>
-	<form action="${base }/register.do" class="register" method="post">
+	<form action="${base }/toLogin.do" class="register" method="post">
 		<div class="nav">
 			<div class="nav register_nav">
 				<div class="col-xs-4">
@@ -200,12 +257,12 @@ function barter_btn(bb) {
 					×
 				</div>
 			</div>
-			<div class="nav register_affirm">
+			<div class="nav register_email">
 				<div class="col-xs-4">
 					邮&nbsp;&nbsp;&nbsp;箱:
 				</div>
 				<div class="col-xs-6">
-					<input type="text" name="email" id="name_r" value="" placeholder="&nbsp;&nbsp;电子邮箱" onBlur="javascript:ok_or_errorByRegister(this)" />
+					<input type="text" name="email" id="email" value="" placeholder="&nbsp;&nbsp;电子邮箱" onBlur="javascript:ok_or_errorByRegister(this)" />
 				</div>
 				<div class="col-xs-1 ok_gou">
 					√

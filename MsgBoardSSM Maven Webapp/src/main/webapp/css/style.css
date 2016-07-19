@@ -38,7 +38,11 @@
 .register_affirm{margin-top: 30px;}
 .register_affirm .col-xs-4{text-align: right; height: 40px; line-height: 40px; font-size: 20px; font-weight: bold; }
 .register_affirm .col-xs-6{height: 40px; padding: 0px;}
+.register_email{margin-top: 30px;}
+.register_email .col-xs-4{text-align: right; height: 40px; line-height: 40px; font-size: 20px; font-weight: bold; }
+.register_email .col-xs-6{height: 40px; padding: 0px;}
 #affirm_psd{height: 40px; font-size: 12px; outline: 0px; border-radius: 10px; border: 1px solid #CCCCCC; width: 95%; }
+#email{height: 40px; font-size: 12px; outline: 0px; border-radius: 10px; border: 1px solid #CCCCCC; width: 95%; }
 .register_btn_div{text-align: center; margin-top: 30px; padding-left: 50px;}
 #register{outline: 0px; border: 0px; width: 200px; height: 40px; border-radius: 10px; color: white; font-weight: bold; font-size: 20px;}
 .barter_register{text-align: center; position: absolute; bottom: 0;margin-bottom: 10px;}
